@@ -2,12 +2,12 @@
 
 This is a Spring Boot application using Hibernate JPA, an embedded Tomcat server, and an in memory H2 database.
 
-To run on Windows:
+To run on Windows, open a command window at your unzip directory:
  
-    ./mvnw.cmd spring-boot:run
-To run on Unix:
+    .\mvnw.cmd spring-boot:run
+To run on Unix, open a terminal at your unzip directory:
     
-    .\mvnw spring-boot:run
+    ./mvnw spring-boot:run
     
 
 
