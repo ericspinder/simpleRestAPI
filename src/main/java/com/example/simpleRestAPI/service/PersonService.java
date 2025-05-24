@@ -20,10 +20,13 @@ public class PersonService {
         return personRepository.findAll();
     }
 
-    public PersonRepository getBookRepository() {
+    public PersonRepository getPersonRepository() {
         return personRepository;
     }
-    public void add(Person person) {
+    public Person add(String name) {
+        Person person = personRepository.findById(name).orElse(new Person(name));
+        person.incrementTimesSeen();
         this.personRepository.save(person);
+        return person;
     }
 }

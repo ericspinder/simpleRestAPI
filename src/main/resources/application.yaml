@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: simpleRestAPI
+  jpa:
+    hibernate:
+      ddl-auto: create
+server:
+  port: 8081
