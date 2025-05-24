@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-class PersonController {
+class SimpleRestAPIController {
 
     private final PersonService personService;
     private final InterestService interestService;
 
-    public PersonController(PersonService personService, InterestService interestService) {
+    public SimpleRestAPIController(PersonService personService, InterestService interestService) {
         this.personService = personService;
         this.interestService = interestService;
     }
