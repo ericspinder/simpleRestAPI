@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 class SimpleRestAPIController {
@@ -54,5 +55,32 @@ class SimpleRestAPIController {
         return interestService.listInterests(person).stream()
                 .map(Interest::getInterest)
                 .toList();
+    }
+
+    @RequestMapping("/person/{person}/friends")
+    public Set<Person> listFriends(@PathVariable String name) {
+        Person person = personService.getPersonRepository().findById(name).orElse(null);
+        if (person != null) {
+            return person.getFriends();
+        }
+        else {
+            return Set.of();
+        }
+    }
+    @RequestMapping("/person/{name}/friend/{friendName}")
+    public String manageFriend(@PathVariable String name, @PathVariable String friendName,
+                               @RequestParam(required = false, defaultValue = "add") String action) {
+        if ("remove".equalsIgnoreCase(action)) {
+            personService.removeFriend(name, friendName);
+            return "Removed friend '" + friendName + "' for " + name;
+        } else {
+            personService.addFriend(name, friendName);
+            return "Added friend '" + friendName + "' for " + name;
+        }
+    }
+
+    @RequestMapping("/person/{name}/friends/shared-interests")
+    public List<String> getSharedInterestFriends(@PathVariable String name) {
+        return personService.getFriendsWithSharedInterests(name);
     }
 }
