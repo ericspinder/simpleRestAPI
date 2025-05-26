@@ -21,6 +21,12 @@ class SimpleRestAPIControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @MockitoBean
+    private PersonService personService;
+
+    @MockitoBean
+    private InterestService interestService;
+
     // Test for new endpoint: manageFriend (add)
     @Test
     void manageFriend_Add_Success() throws Exception {
