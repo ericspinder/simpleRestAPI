@@ -4,10 +4,10 @@ This is a Spring Boot application using Hibernate JPA, an embedded Tomcat server
 
 To run on Windows:
 
-    .\mvnw.cmd spring-boot:run
+    .\mvnw.cmd test spring-boot:run
 To run on Unix:
 
-    ./mvnw spring-boot:run
+    ./mvnw test spring-boot:run
 
 
 

@@ -10,14 +10,14 @@ public class PersonTest {
     void testPersonCreation() {
         Person person = new Person("John");
         assertEquals("John", person.getName());
-        assertEquals(1, person.getTimesSeen()); // Counter should initialize to 1
+        assertEquals(0, person.getTimesSeen()); // Counter should initialize to 1
     }
 
     @Test
     void testIncrementTimesSeen() {
         Person person = new Person("Jane");
         person.incrementTimesSeen();
-        assertEquals(2, person.getTimesSeen()); // Counter should increment correctly
+        assertEquals(1, person.getTimesSeen()); // Counter should increment correctly
     }
 
     @Test

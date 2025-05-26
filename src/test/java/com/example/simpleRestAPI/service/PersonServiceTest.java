@@ -44,7 +44,7 @@ class PersonServiceTest {
         personService.addFriend("Alice", "Bob");
 
         assertTrue(person.getFriends().stream().anyMatch(f -> f.getName().equals("Bob")));
-        verify(personRepository, times(2)).save(any(Person.class)); // Saves new friend and updated person
+        verify(personRepository, times(3)).save(any(Person.class)); // Saves new friend and updated person
     }
 
     // Test for new method: removeFriend

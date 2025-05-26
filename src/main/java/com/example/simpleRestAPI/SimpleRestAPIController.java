@@ -57,7 +57,7 @@ class SimpleRestAPIController {
                 .toList();
     }
 
-    @RequestMapping("/person/{person}/friends")
+    @RequestMapping("/person/{name}/friends")
     public Set<Person> listFriends(@PathVariable String name) {
         Person person = personService.getPersonRepository().findById(name).orElse(null);
         if (person != null) {

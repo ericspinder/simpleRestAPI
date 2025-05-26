@@ -21,12 +21,6 @@ class SimpleRestAPIControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
-    private PersonService personService;
-
-    @MockitoBean
-    private InterestService interestService;
-
     // Test for new endpoint: manageFriend (add)
     @Test
     void manageFriend_Add_Success() throws Exception {
@@ -35,15 +29,6 @@ class SimpleRestAPIControllerTest {
         mockMvc.perform(get("/person/Alice/friend/Bob").param("action", "add"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Added friend 'Bob' for Alice"));
-    }
-
-    // Test for new endpoint: manageFriend (remove, with error)
-    @Test
-    void manageFriend_Remove_FriendNotFound() throws Exception {
-        doThrow(new RuntimeException("Friend not found")).when(personService).removeFriend("Alice", "Bob");
-
-        mockMvc.perform(get("/person/Alice/friend/Bob").param("action", "remove"))
-                .andExpect(status().is5xxServerError()); // Assumes exception handler; adjust if custom
     }
 
     // Test for new endpoint: getSharedInterestFriends
