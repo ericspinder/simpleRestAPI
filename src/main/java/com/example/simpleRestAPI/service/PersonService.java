@@ -1,7 +1,9 @@
 package com.example.simpleRestAPI.service;
 
+import com.example.simpleRestAPI.Friend;
 import com.example.simpleRestAPI.Interest;
 import com.example.simpleRestAPI.Person;
+import com.example.simpleRestAPI.repositories.FriendRepository;
 import com.example.simpleRestAPI.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +17,13 @@ import java.util.stream.Collectors;
 public class PersonService {
 
     private final PersonRepository personRepository;
-
-    private final InterestService interestService; // New dependency for interest checks
+    private final FriendRepository friendRepository;
+    private final InterestService interestService;
 
     @Autowired
-    public PersonService(PersonRepository personRepository, InterestService interestService) {
+    public PersonService(PersonRepository personRepository, FriendRepository friendRepository, InterestService interestService) {
         this.personRepository = personRepository;
+        this.friendRepository = friendRepository;
         this.interestService = interestService;
     }
     public List<Person> list() {
@@ -45,8 +48,26 @@ public class PersonService {
                     newFriend.setTimesSeen(0); // New person hasn't been seen
                     return personRepository.save(newFriend);
                 });
-        if (!person.getFriends().contains(friend)) {
+
+        if (person.getFriends().stream().noneMatch(p -> p.getName().equals(friendName))) {
             person.addFriend(friend);
+            personRepository.save(person);
+            personRepository.save(friend); // Save both for relationship
+        }
+    }
+
+    public void addFriend(String personName, String friendName, String relationshipDescription) {
+        Person person = personRepository.findById(personName)
+                .orElseThrow(() -> new RuntimeException("Person not found"));
+        Person friend = personRepository.findById(friendName)
+                .orElseGet(() -> {
+                    Person newFriend = new Person(friendName);
+                    newFriend.setTimesSeen(0); // New person hasn't been seen
+                    return personRepository.save(newFriend);
+                });
+
+        if (person.getFriends().stream().noneMatch(p -> p.getName().equals(friendName))) {
+            person.addFriend(friend, relationshipDescription);
             personRepository.save(person);
             personRepository.save(friend); // Save both for relationship
         }

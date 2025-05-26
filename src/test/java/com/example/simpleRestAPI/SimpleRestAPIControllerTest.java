@@ -78,4 +78,15 @@ class SimpleRestAPIControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Added interest 'Reading' for Alice"));
     }
+    @Test
+    void manageFriend_AddWithRelationship_Success() throws Exception {
+        doNothing().when(personService).addFriend("Alice", "Bob", "College friends");
+
+        mockMvc.perform(get("/person/Alice/friend/Bob")
+                        .param("action", "add")
+                        .param("relationship", "College friends"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("Added friend 'Bob' for Alice with relationship: College friends"));
+    }
+
 }

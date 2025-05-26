@@ -1,7 +1,9 @@
 package com.example.simpleRestAPI.service;
 
+import com.example.simpleRestAPI.Friend;
 import com.example.simpleRestAPI.Interest;
 import com.example.simpleRestAPI.Person;
+import com.example.simpleRestAPI.repositories.FriendRepository;
 import com.example.simpleRestAPI.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +21,9 @@ class PersonServiceTest {
 
     @Mock
     private PersonRepository personRepository;
+
+    @Mock
+    private FriendRepository friendRepository;
 
     @Mock
     private InterestService interestService;
@@ -60,6 +65,22 @@ class PersonServiceTest {
         personService.removeFriend("Alice", "Bob");
 
         assertFalse(person.getFriends().contains(friend));
+        verify(personRepository, times(2)).save(any(Person.class));
+    }
+
+    // Test for new method: addFriend with relationship description
+    @Test
+    void addFriend_WithRelationshipDescription_CreatesAndAdds() {
+        Person person = new Person("Alice");
+        Person friend = new Person("Bob");
+        when(personRepository.findById("Alice")).thenReturn(Optional.of(person));
+        when(personRepository.findById("Bob")).thenReturn(Optional.of(friend));
+        when(personRepository.save(any(Person.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        personService.addFriend("Alice", "Bob", "College friends");
+
+        assertTrue(person.getFriends().stream().anyMatch(f -> f.getName().equals("Bob")));
+        assertEquals("College friends", person.getFriendships().iterator().next().getRelationshipDescription());
         verify(personRepository, times(2)).save(any(Person.class));
     }
 

@@ -53,11 +53,16 @@ http://localhost:8081/person/Handsome/friend/Buddy
 
 http://localhost:8081/person/Handsome/friend/MyMan (checking /log, MyMan should at this point have been seen 0 times)
 
+http://localhost:8081/person/Handsome/friend/MyMan?action=remove
+
 "/person/{name}/friends" will list all your friends
 
 http://localhost:8081/person/Handsome/friends
 
+http://localhost:8081/person/Buddy/friends
+
 "/person/{name}/friends/shared-interests" will list those who have the same interests
+
 http://localhost:8081/person/Handsome/friends/shared-interests
 
 To end your tomcat session simply close the command window, or kill the process in your IDE. As it's an in memory database all values will be lost.

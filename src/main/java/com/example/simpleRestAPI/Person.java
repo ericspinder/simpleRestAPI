@@ -1,14 +1,10 @@
 package com.example.simpleRestAPI;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
-import org.apache.catalina.User;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Entity
 public class Person {
@@ -18,16 +14,16 @@ public class Person {
 
     private int timesSeen = 0; // Counter for how many times this person has been seen
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "person_friends",
-            joinColumns = @JoinColumn(name = "person_name"),
-            inverseJoinColumns = @JoinColumn(name = "friend_name")
-    )
-    private Set<Person> friends = new HashSet<>();
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Friend> friendships = new HashSet<>();
+
+    @OneToMany(mappedBy = "friendPerson", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Friend> friendOf = new HashSet<>();
+
     public Person() {
 
     }
+
     public Person(String name) {
         this.name = name;
     }
@@ -42,18 +38,33 @@ public class Person {
 
     @JsonIgnore
     public Set<Person> getFriends() {
-        return friends;
+        return friendships.stream()
+                .map(Friend::getFriendPerson)
+                .collect(Collectors.toSet());
     }
 
     public void addFriend(Person friend) {
-        this.friends.add(friend);
-        friend.getFriends().add(this); // Ensure bidirectional relationship
+        Friend friendship = new Friend(this, friend);
+        this.friendships.add(friendship);
+        Friend reverseFriendship = new Friend(friend, this);
+        friend.friendships.add(reverseFriendship);
+    }
+
+    public void addFriend(Person friend, String relationshipDescription) {
+        Friend friendship = new Friend(this, friend);
+        friendship.setRelationshipDescription(relationshipDescription);
+        this.friendships.add(friendship);
+
+        Friend reverseFriendship = new Friend(friend, this);
+        reverseFriendship.setRelationshipDescription(relationshipDescription);
+        friend.friendships.add(reverseFriendship);
     }
 
     public void removeFriend(Person friend) {
-        this.friends.remove(friend);
-        friend.getFriends().remove(this); // Ensure bidirectional relationship
+        this.friendships.removeIf(friendship -> friendship.getFriendPerson().equals(friend));
+        friend.friendships.removeIf(friendship -> friendship.getFriendPerson().equals(this));
     }
+
     public int getTimesSeen() {
         return timesSeen;
     }
@@ -64,5 +75,15 @@ public class Person {
 
     public void incrementTimesSeen() {
         this.timesSeen++;
+    }
+
+    @JsonIgnore
+    public Set<Friend> getFriendships() {
+        return friendships;
+    }
+
+    @JsonIgnore
+    public Set<Friend> getFriendOf() {
+        return friendOf;
     }
 }

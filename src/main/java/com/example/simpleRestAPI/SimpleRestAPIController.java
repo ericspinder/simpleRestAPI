@@ -67,20 +67,26 @@ class SimpleRestAPIController {
             return Set.of();
         }
     }
-    @RequestMapping("/person/{name}/friend/{friendName}")
-    public String manageFriend(@PathVariable String name, @PathVariable String friendName,
-                               @RequestParam(required = false, defaultValue = "add") String action) {
-        if ("remove".equalsIgnoreCase(action)) {
-            personService.removeFriend(name, friendName);
-            return "Removed friend '" + friendName + "' for " + name;
-        } else {
-            personService.addFriend(name, friendName);
-            return "Added friend '" + friendName + "' for " + name;
-        }
-    }
 
     @RequestMapping("/person/{name}/friends/shared-interests")
     public List<String> getSharedInterestFriends(@PathVariable String name) {
         return personService.getFriendsWithSharedInterests(name);
+    }
+    @RequestMapping("/person/{name}/friend/{friendName}")
+    public String manageFriend(@PathVariable String name, @PathVariable String friendName,
+                               @RequestParam(required = false, defaultValue = "add") String action,
+                               @RequestParam(required = false) String relationship) {
+        if ("remove".equalsIgnoreCase(action)) {
+            personService.removeFriend(name, friendName);
+            return "Removed friend '" + friendName + "' for " + name;
+        } else {
+            if (relationship != null && !relationship.isEmpty()) {
+                personService.addFriend(name, friendName, relationship);
+                return "Added friend '" + friendName + "' for " + name + " with relationship: " + relationship;
+            } else {
+                personService.addFriend(name, friendName);
+                return "Added friend '" + friendName + "' for " + name;
+            }
+        }
     }
 }
