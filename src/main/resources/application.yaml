@@ -1,8 +1,72 @@
+# src/main/resources/application.yaml
 spring:
   application:
     name: simpleRestAPI
   jpa:
     hibernate:
       ddl-auto: create
+  profiles:
+    active: local
+  h2:
+    console:
+      enabled: true
+
+# Common properties for all profiles
 server:
   port: 8081
+
+---
+# Local profile configuration
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:simpleAPI_local
+    username: sa
+    password:
+server:
+  address: localhost
+
+---
+# Dev profile configuration
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:simpleAPI_dev
+    username: sa
+    password:
+server:
+  address: localhost
+
+---
+# Integration profile configuration
+spring:
+  config:
+    activate:
+      on-profile: integration
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:simpleAPI_integration
+    username: sa
+    password:
+server:
+  address: localhost
+
+---
+# Production profile configuration
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:simpleAPI_prod
+    username: sa
+    password:
+server:
+  address: localhost

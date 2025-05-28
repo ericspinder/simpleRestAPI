@@ -4,11 +4,18 @@ This is a Spring Boot application using Hibernate JPA, an embedded Tomcat server
 
 To run on Windows:
 
-    .\mvnw.cmd test spring-boot:run
+    .\mvnw.cmd clean test spring-boot:run
+
+   once that's started run JMeter...
+
+    .\mvnw.cmd jmeter:jmeter
 To run on Unix:
 
-    ./mvnw test spring-boot:run
+    ./mvnw clean test spring-boot:run
 
+   Once that's started run the JMeter maven goal
+
+    ./mvnw jmeter:jmeter
 
 
 "/hello/{name}" will echo the name back to you, while saving it to the database.

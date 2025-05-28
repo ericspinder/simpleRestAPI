@@ -19,8 +19,4 @@ public class SimpleRestApiApplication {
 		SpringApplication.run(SimpleRestApiApplication.class, args);
 	}
 
-	@Bean
-	public DataSource dataSource() {
-		return DataSourceBuilder.create().driverClassName("org.h2.Driver").username("sa").password("").url("jdbc:h2:mem:simpleAPI_inMemory").build();
-	}
 }
